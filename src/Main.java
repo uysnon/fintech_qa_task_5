@@ -7,15 +7,16 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-    private static final int LENGTH_ARRAY = 100000; //length of the sortable array
+    private static final int LENGTH_ARRAY = 35000; //length of the sortable array
 
-    private static final int MIN_ELEMENT = - 1000;
-    private static final int  MAX_ELEMENT = 1000;
-    private static final int NUM_SELECTION_VARIATIONS = 2;
+    private static final int MIN_ELEMENT = -10000;
+    private static final int  MAX_ELEMENT = 10000;
+    private static final int NUM_SELECTION_VARIATIONS = 3;
     private static final String MESSAGE_PICK = "Select sort method: \n " +
             "0. All the following sorts\n " +
             "1. Gnome sort and its optimized version \n " +
-            "2. Bubble sort and cocktail sort"
+            "2. Bubble sort and cocktail sort\n " +
+            "3. Quick sort"
             ;
     private static final String MESSAGE_ERROR = "Something went wrong";
     private static final String LINE = "__________________________________________________________________________";
@@ -41,6 +42,8 @@ public class Main {
             break;
             case 2: printBubbleCocktailSorts(array);
             break;
+            case 3: printQuickSort(array);
+            break;
             default: System.out.println(MESSAGE_ERROR);
             break;
         }
@@ -50,6 +53,13 @@ public class Main {
     private static void printAllSorts(int [] pArray){
         printGnomeSorts(pArray);
         printBubbleCocktailSorts(pArray);
+        printQuickSort(pArray);
+        int [] array = Arrays.copyOf(pArray, pArray.length);
+        long time0 = System.nanoTime();
+        Arrays.sort(array);
+        long time1 = System.nanoTime();
+        System.out.println(LINE+"\nJAVA-SORT\n");
+        showDuration(time1-time0);
     }
 
 
@@ -100,6 +110,24 @@ public class Main {
         if (LENGTH_ARRAY < 50000)outPutArray(sortGnomeOptimizationArray);
         System.out.println("\n");
     }
+
+    private static void printQuickSort(int [] pArray){
+        long durationQuick, startTimeQuick, endTimeQuick;
+        startTimeQuick = System.nanoTime();
+        int [] sortQuickArray = Arrays.copyOf(pArray,pArray.length);
+        quickSort(sortQuickArray, 0,sortQuickArray.length-1);
+        endTimeQuick = System.nanoTime();
+        durationQuick = endTimeQuick - startTimeQuick;
+
+
+        System.out.println(LINE+"\nQuick sort:");
+        showDuration(durationQuick);
+        if (LENGTH_ARRAY < 50000)outPutArray(sortQuickArray);
+        System.out.println("\n");
+
+    }
+
+
 
     //***************************************methods for bubble sort
     private static int [] sortBubble(int[] pArray){
@@ -194,6 +222,28 @@ public class Main {
         return sortArray;
     }
 
+
+    //*************************************************quick sort method
+    private static void quickSort(int [] pArray, int index1, int index2){
+        int [] array = pArray;
+        double pivot = ((pArray[index1]+pArray[index2]+pArray[(index1+index2)/2])/3.0);
+        int pointer1 = index1;
+        int pointer2 = index2;
+        while (pointer1 <= pointer2) {
+            for (int i = pointer1; i <= index2; i++) {
+                    pointer1 = i;
+                    if (array[i] > pivot) break;
+                }
+            for (int i = pointer2; i >= index1; i--) {
+                    pointer2 = i;
+                    if (array[i] < pivot) break;
+                }
+
+            if (pointer1 < pointer2) changeElements(array,pointer1,pointer2);
+        }
+        if (index1 != pointer2) quickSort(array,index1,pointer2);
+        if (pointer1 != index2) quickSort(array,pointer1,index2);
+    }
     //**********************************
 
     private static void changeElements(int [] pArray, int pIndex1, int pIndex2){
