@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-    private static final int LENGTH_ARRAY = 35000; //length of the sortable array
+    private static final int LENGTH_ARRAY = 20000; //length of the sortable array
 
     private static final int MIN_ELEMENT = -10000;
     private static final int  MAX_ELEMENT = 10000;
